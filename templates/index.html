@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Banner Principal -->
+{% if destaque %}
+<div class="hero-banner" style="background-image: url('{{ destaque.imagem_url }}');">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <span class="badge bg-danger mb-2">Destaque Favorito</span>
+        <h1 class="display-4 fw-bold">{{ destaque.titulo }}</h1>
+        <p class="text-success fw-bold">{{ destaque.nota }} ★ | {{ destaque.ano }} | {{ destaque.genero }}</p>
+        <p class="lead fs-6">{{ destaque.sinopse }}</p>
+        <a href="{{ url_for('editar', id=destaque.id) }}" class="btn btn-light fw-bold px-4">✎ Editar Destaque</a>
+    </div>
+</div>
+{% else %}
+<div class="text-center py-5">
+    <h2>Seu catálogo está vazio!</h2>
+    <p class="text-secondary">Clique no botão "+ Adicionar Título" no topo para começar sua coleção.</p>
+</div>
+{% endif %}
+
+<!-- Seção de Filmes -->
+{% if filmes %}
+<div class="row-section">
+    <h2 class="row-title">Meus Filmes Favoritos</h2>
+    <div class="movies-grid">
+        {% for filme in filmes %}
+        <div class="movie-card"
+             onclick="abrirDetalhes(this)"
+             data-id="{{ filme.id }}"
+             data-titulo="{{ filme.titulo }}"
+             data-tipo="{{ filme.tipo }}"
+             data-genero="{{ filme.genero }}"
+             data-ano="{{ filme.ano }}"
+             data-nota="{{ filme.nota }}"
+             data-imagem="{{ filme.imagem_url }}"
+             data-sinopse="{{ filme.sinopse or 'Nenhuma sinopse cadastrada para este título.' }}">
+            
+            <img src="{{ filme.imagem_url }}" alt="{{ filme.titulo }}" onerror="this.src='https://via.placeholder.com/300x450?text=Sem+Capa'">
+            <div class="movie-info">
+                <h3 class="movie-title">{{ filme.titulo }}</h3>
+                <div class="movie-meta">{{ filme.nota }} ★ • {{ filme.ano }}</div>
+                <div class="card-actions" onclick="event.stopPropagation()">
+                    <a href="{{ url_for('editar', id=filme.id) }}" class="btn btn-sm btn-outline-light flex-grow-1">Editar</a>
+                    <form action="{{ url_for('deletar', id=filme.id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este título?');">
+                        <button type="submit" class="btn btn-sm btn-danger">🗑</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Seção de Séries -->
+{% if series %}
+<div class="row-section">
+    <h2 class="row-title">Minhas Séries Favoritas</h2>
+    <div class="movies-grid">
+        {% for serie in series %}
+        <div class="movie-card"
+             onclick="abrirDetalhes(this)"
+             data-id="{{ serie.id }}"
+             data-titulo="{{ serie.titulo }}"
+             data-tipo="{{ serie.tipo }}"
+             data-genero="{{ serie.genero }}"
+             data-ano="{{ serie.ano }}"
+             data-nota="{{ serie.nota }}"
+             data-imagem="{{ serie.imagem_url }}"
+             data-sinopse="{{ serie.sinopse or 'Nenhuma sinopse cadastrada para este título.' }}">
+            
+            <img src="{{ serie.imagem_url }}" alt="{{ serie.titulo }}" onerror="this.src='https://via.placeholder.com/300x450?text=Sem+Capa'">
+            <div class="movie-info">
+                <h3 class="movie-title">{{ serie.titulo }}</h3>
+                <div class="movie-meta">{{ serie.nota }} ★ • {{ serie.ano }}</div>
+                <div class="card-actions" onclick="event.stopPropagation()">
+                    <a href="{{ url_for('editar', id=serie.id) }}" class="btn btn-sm btn-outline-light flex-grow-1">Editar</a>
+                    <form action="{{ url_for('deletar', id=serie.id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este título?');">
+                        <button type="submit" class="btn btn-sm btn-danger">🗑</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- MODAL DE DETALHES (ESTILO NETFLIX) -->
+<div class="modal fade netflix-modal" id="detalhesModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <!-- Imagem de Capa no Topo do Modal -->
+            <div class="modal-hero" id="modalBanner">
+                <div class="modal-hero-overlay"></div>
+                <button type="button" class="modal-close-btn" data-bs-dismiss="modal" aria-label="Fechar">✕</button>
+            </div>
+
+            <!-- Informações Detalhadas -->
+            <div class="modal-body-netflix">
+                <span class="badge bg-danger mb-2" id="modalTipo">Filme</span>
+                <h2 class="fw-bold mb-2" id="modalTitulo">Título</h2>
+                
+                <div class="d-flex align-items-center gap-3 mb-3 text-sm">
+                    <span class="text-success fw-bold" id="modalNota">9.5 ★</span>
+                    <span class="text-secondary" id="modalAno">2024</span>
+                    <span class="badge border border-secondary text-light" id="modalGenero">Gênero</span>
+                </div>
+
+                <p class="text-light lh-base mb-4" id="modalSinopse">Sinopse completa aqui...</p>
+
+                <!-- Botões de Ação dentro do Modal -->
+                <div class="d-flex gap-2 border-top border-secondary pt-3">
+                    <a href="#" id="modalBtnEditar" class="btn btn-light fw-bold px-4">✎ Editar Título</a>
+                    <form id="modalFormDeletar" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este título?');">
+                        <button type="submit" class="btn btn-outline-danger px-4">🗑 Excluir</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script para preencher e abrir o Modal -->
+<script>
+    function abrirDetalhes(card) {
+        // 1. Extrai os dados dos atributos data-* do cartão clicado
+        const id = card.getAttribute('data-id');
+        const titulo = card.getAttribute('data-titulo');
+        const tipo = card.getAttribute('data-tipo');
+        const genero = card.getAttribute('data-genero');
+        const ano = card.getAttribute('data-ano');
+        const nota = card.getAttribute('data-nota');
+        const imagem = card.getAttribute('data-imagem');
+        const sinopse = card.getAttribute('data-sinopse');
+
+        // 2. Preenche os elementos dentro do Modal
+        document.getElementById('modalBanner').style.backgroundImage = `url('${imagem}')`;
+        document.getElementById('modalTipo').textContent = tipo;
+        document.getElementById('modalTitulo').textContent = titulo;
+        document.getElementById('modalNota').textContent = `${nota} ★ Relevância`;
+        document.getElementById('modalAno').textContent = ano;
+        document.getElementById('modalGenero').textContent = genero;
+        document.getElementById('modalSinopse').textContent = sinopse;
+
+        // 3. Atualiza os links dos botões Editar e Excluir
+        document.getElementById('modalBtnEditar').href = `/editar/${id}`;
+        document.getElementById('modalFormDeletar').action = `/deletar/${id}`;
+
+        // 4. Exibe o Modal na tela
+        const modal = new bootstrap.Modal(document.getElementById('detalhesModal'));
+        modal.show();
+    }
+</script>
+
+{% endblock %}

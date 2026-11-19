@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="form-container">
+    <h2 class="mb-4">{{ 'Editar Título' if midia else 'Cadastrar Novo Título' }}</h2>
+    
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">Título</label>
+            <input type="text" name="titulo" class="form-control" required value="{{ midia.titulo if midia else '' }}" placeholder="Ex: Interestelar">
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Tipo</label>
+                <select name="tipo" class="form-select" required>
+                    <option value="Filme" {% if midia and midia.tipo == 'Filme' %}selected{% endif %}>Filme</option>
+                    <option value="Série" {% if midia and midia.tipo == 'Série' %}selected{% endif %}>Série</option>
+                </select>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Gênero</label>
+                <input type="text" name="genero" class="form-control" required value="{{ midia.genero if midia else '' }}" placeholder="Ex: Ficção Científica">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Ano de Lançamento</label>
+                <input type="number" name="ano" class="form-control" required value="{{ midia.ano if midia else '' }}" placeholder="Ex: 2014">
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Sua Nota (0 a 10)</label>
+                <input type="number" step="0.1" min="0" max="10" name="nota" class="form-control" required value="{{ midia.nota if midia else '' }}" placeholder="Ex: 9.5">
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">URL da Imagem (Capa/Poster)</label>
+            <input type="url" name="imagem_url" class="form-control" required value="{{ midia.imagem_url if midia else '' }}" placeholder="Cole o link de uma imagem da internet">
+            <small class="text-secondary">Dica: Pesquise o pôster no Google Imagens, clique com o botão direito e escolha "Copiar endereço da imagem".</small>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label">Sinopse / Comentário Pessoal</label>
+            <textarea name="sinopse" class="form-control" rows="3" placeholder="Por que você gosta desse título?">{{ midia.sinopse if midia else '' }}</textarea>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn-netflix flex-grow-1 py-2">Salvar</button>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary py-2 px-4">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

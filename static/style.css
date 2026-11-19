@@ -1,0 +1,219 @@
+body {
+    background-color: #141414;
+    color: #ffffff;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Barra de Navegação */
+.navbar-netflix {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9) 10%, rgba(0,0,0,0));
+    padding: 15px 4%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-netflix {
+    color: #E50914;
+    font-size: 2rem;
+    font-weight: bold;
+    text-decoration: none;
+    letter-spacing: 2px;
+}
+
+.btn-netflix {
+    background-color: #E50914;
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 4px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.btn-netflix:hover {
+    background-color: #f40612;
+    color: white;
+}
+
+/* Banner de Destaque */
+.hero-banner {
+    height: 60vh;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0 4%;
+    margin-bottom: 30px;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(to right, #141414 25%, transparent 80%),
+                linear-gradient(to top, #141414 5%, transparent 40%);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 550px;
+}
+
+/* Carrossel / Grade de Filmes */
+.row-section {
+    padding: 0 4%;
+    margin-bottom: 40px;
+}
+
+.row-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #e5e5e5;
+}
+
+.movies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+/* Cartão Individual */
+.movie-card {
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #222;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    aspect-ratio: 2 / 3;
+}
+
+.movie-card:hover {
+    transform: scale(1.07);
+    z-index: 10;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+}
+
+.movie-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Informações que aparecem ao passar o mouse */
+.movie-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 60%, transparent);
+    padding: 15px 10px 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.movie-card:hover .movie-info {
+    opacity: 1;
+}
+
+.movie-title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0 0 5px 0;
+}
+
+.movie-meta {
+    font-size: 0.8rem;
+    color: #46d369;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.card-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* Formulários */
+.form-container {
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: rgba(0, 0, 0, 0.75);
+    padding: 40px;
+    border-radius: 8px;
+}
+
+.form-control, .form-select {
+    background-color: #333 !important;
+    border: none !important;
+    color: white !important;
+}
+
+.form-control:focus, .form-select:focus {
+    box-shadow: 0 0 0 2px #E50914 !important;
+}
+/* Cursor de clique nos cartões */
+.movie-card {
+    cursor: pointer;
+}
+
+/* Estilo do Modal Estilo Netflix */
+.netflix-modal .modal-content {
+    background-color: #181818;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9);
+}
+
+.modal-hero {
+    height: 320px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.modal-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, #181818 10%, rgba(24, 24, 24, 0.2) 60%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+    background-color: #181818;
+    color: white;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.modal-close-btn:hover {
+    background-color: #E50914;
+}
+
+.modal-body-netflix {
+    padding: 0 30px 30px 30px;
+    margin-top: -40px;
+    position: relative;
+    z-index: 5;
+}
